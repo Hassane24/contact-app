@@ -19,14 +19,6 @@ const connectToDatabase = async () => {
 };
 
 const createTables = async (db: SQLiteDatabase) => {
-  const userPreferencesQuery = `
-    CREATE TABLE IF NOT EXISTS UserPreferences (
-        id INTEGER DEFAULT 1,
-        colorPreference TEXT,
-        languagePreference TEXT,
-        PRIMARY KEY(id)
-    )
-  `;
   const contactsQuery = `
    CREATE TABLE IF NOT EXISTS Contacts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +28,6 @@ const createTables = async (db: SQLiteDatabase) => {
    )
   `;
   try {
-    await db.executeSql(userPreferencesQuery);
     await db.executeSql(contactsQuery);
   } catch (error) {
     console.error(error);
