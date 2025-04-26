@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, Image, Pressable, Modal } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Modal,
+  GestureResponderEvent,
+} from "react-native";
 import { useState } from "react";
 
 interface Contact {
@@ -17,19 +25,14 @@ export default function Profile({ contact }: ProfileProps) {
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
   const handleMorePress = (id: string, event: any) => {
-    event.target.measure(
-      (
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number
-      ) => {
-        setMenuPosition({ top: pageY + height, right: width });
-        setSelectedContact(selectedContact === id ? null : id);
-      }
-    );
+    console.log("event", event);
+    event.target.measure((width: number, height: number) => {
+      setMenuPosition({
+        top: event.pageY + height,
+        right: event.target.offsetLeft + width,
+      });
+      setSelectedContact(selectedContact === id ? null : id);
+    });
   };
 
   return (
