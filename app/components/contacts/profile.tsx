@@ -1,13 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  FlatList,
-  Modal,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, Modal } from "react-native";
 import { useState } from "react";
 
 interface Contact {
@@ -17,34 +8,11 @@ interface Contact {
   image: string;
 }
 
-const CONTACTS: Contact[] = [
-  {
-    id: "1",
-    name: "Takeshi Movic",
-    location: "San Francisco, CA",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-  },
-  {
-    id: "2",
-    name: "Emma Larwind",
-    location: "Stockholm, SE",
-    image: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-  {
-    id: "3",
-    name: "Giovanni Naitila",
-    location: "Rome, Italy",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    id: "4",
-    name: "Miyoshi Zawn",
-    location: "Los Angeles, CA",
-    image: "https://randomuser.me/api/portraits/women/4.jpg",
-  },
-];
+interface ProfileProps {
+  contact: Contact;
+}
 
-export default function Profile() {
+export default function Profile({ contact }: ProfileProps) {
   const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
@@ -64,32 +32,24 @@ export default function Profile() {
     );
   };
 
-  const renderContact = ({ item }: { item: Contact }) => (
-    <View style={styles.contactCard}>
-      <View style={styles.leftSection}>
-        <Image source={{ uri: item.image }} style={styles.avatar} />
-        <View style={styles.infoContainer}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.location}>{item.location}</Text>
-        </View>
-      </View>
-      <Pressable
-        style={styles.moreButton}
-        onPress={(event) => handleMorePress(item.id, event)}
-      >
-        <Text style={styles.moreButtonText}>⋮</Text>
-      </Pressable>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      <FlatList
-        contentContainerStyle={styles.listContainer}
-        data={CONTACTS}
-        renderItem={renderContact}
-        keyExtractor={(item) => item.id}
-      />
+      <View style={styles.contactCard}>
+        <View style={styles.leftSection}>
+          <Image source={{ uri: contact.image }} style={styles.avatar} />
+          <View style={styles.infoContainer}>
+            <Text style={styles.name}>{contact.name}</Text>
+            <Text style={styles.location}>{contact.location}</Text>
+          </View>
+        </View>
+        <Pressable
+          style={styles.moreButton}
+          onPress={(event) => handleMorePress(contact.id, event)}
+        >
+          <Text style={styles.moreButtonText}>⋮</Text>
+        </Pressable>
+      </View>
+
       <Modal
         visible={selectedContact !== null}
         transparent={true}
@@ -124,12 +84,8 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: "100%",
     backgroundColor: "#fff",
-  },
-  listContainer: {
-    paddingVertical: 8,
   },
   contactCard: {
     paddingHorizontal: 16,
