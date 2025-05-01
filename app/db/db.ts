@@ -30,6 +30,33 @@ export const DUMMY_CONTACTS: Contact[] = [
 ];
 
 const connectToDatabase = async () =>
-  await SQLite.openDatabaseAsync("databaseName");
+  await SQLite.openDatabaseAsync("contacts.db");
 
-export default connectToDatabase;
+const initializeDatabase = async () => {
+  try {
+    const database = await connectToDatabase();
+    await database.execAsync(
+      "CREATE TABLE IF NOT EXISTS contacts (id TEXT PRIMARY KEY, name TEXT, location TEXT, image TEXT)"
+    );
+
+    const existingContacts = await database.getAllAsync<Contact>(
+      "SELECT * FROM contacts"
+    );
+
+    if (existingContacts.length === 0) {
+      for (const contact of DUMMY_CONTACTS) {
+        await database.runAsync(
+          "INSERT INTO contacts (id, name, location, image) VALUES (?, ?, ?, ?)",
+          [contact.id, contact.name, contact.location, contact.image]
+        );
+      }
+    }
+
+    return database;
+  } catch (error) {
+    console.error("Error initializing database:", error);
+    throw error;
+  }
+};
+
+export default initializeDatabase;
