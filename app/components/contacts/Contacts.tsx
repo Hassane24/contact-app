@@ -20,7 +20,7 @@ export default function Contacts() {
         const contacts = await database.getAllAsync<Contact>(
           "SELECT id, name, location, image FROM contacts"
         );
-        // Ensure each contact has a valid ID
+        // Ensure each contact is valid and has a valid ID
         const validContacts = contacts.filter(
           (contact) => contact && contact.id
         );
