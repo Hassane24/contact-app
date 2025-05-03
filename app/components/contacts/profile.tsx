@@ -1,151 +1,97 @@
-import { View, Text, StyleSheet, Image, Pressable, Modal } from "react-native";
-import { useState } from "react";
-
-interface Contact {
-  id: string;
-  name: string;
-  location: string;
-  image: string;
-}
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { Contact } from "./Contacts";
+import { useState, useEffect } from "react";
 
 interface ProfileProps {
   contact: Contact;
+  showOptions: boolean;
+  onOptionsPress: () => void;
 }
 
-export default function Profile({ contact }: ProfileProps) {
-  const [selectedContact, setSelectedContact] = useState<string | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+export default function Profile({
+  contact,
+  showOptions,
+  onOptionsPress,
+}: ProfileProps) {
+  const [showOptionsMenu, setShowOptionsMenu] = useState<boolean>(showOptions);
 
-  const handleMorePress = (id: string, event: any) => {
-    event.target.measure((width: number, height: number) => {
-      setMenuPosition({
-        top: event.pageY + height,
-        right: event.target.offsetLeft + width,
-      });
-      setSelectedContact(selectedContact === id ? null : id);
-    });
-  };
+  useEffect(() => {
+    setShowOptionsMenu(showOptions);
+  }, [showOptions]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contactCard}>
-        <View style={styles.leftSection}>
-          <Image source={{ uri: contact.image }} style={styles.avatar} />
-          <View style={styles.infoContainer}>
-            <Text style={styles.name}>{contact.name}</Text>
-            <Text style={styles.location}>{contact.location}</Text>
-          </View>
-        </View>
-        <Pressable
-          style={styles.moreButton}
-          onPress={(event) => handleMorePress(contact.id, event)}
-        >
-          <Text style={styles.moreButtonText}>⋮</Text>
-        </Pressable>
+    <Pressable
+      style={styles.container}
+      onPress={() => showOptionsMenu && onOptionsPress()}
+    >
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: contact.image }} style={styles.image} />
       </View>
-
-      <Modal
-        visible={selectedContact !== null}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setSelectedContact(null)}
+      <View style={styles.infoContainer}>
+        <View>
+          <Text>{contact.name}</Text>
+          <Text>{contact.number}</Text>
+        </View>
+      </View>
+      <Pressable
+        style={{
+          padding: 10,
+        }}
+        onPress={onOptionsPress}
       >
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setSelectedContact(null)}
-        >
-          <View
-            style={[
-              styles.menuContainer,
-              {
-                top: menuPosition.top,
-                right: menuPosition.right,
-              },
-            ]}
-          >
-            <Pressable style={styles.menuItem}>
-              <Text style={styles.menuText}>Edit</Text>
-            </Pressable>
-            <Pressable style={[styles.menuItem, styles.menuItemLast]}>
-              <Text style={styles.menuText}>Delete</Text>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
-    </View>
+        <Text style={{ marginRight: 10, fontSize: 20 }}>⋮</Text>
+      </Pressable>
+      {showOptionsMenu && (
+        <View style={styles.optionsContainer}>
+          <Pressable>
+            <Text>Edit</Text>
+          </Pressable>
+          <Pressable>
+            <Text>Delete</Text>
+          </Pressable>
+        </View>
+      )}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    backgroundColor: "#fff",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: "#f0f0f0",
+    borderBottomWidth: 1,
+    borderBottomColor: "lightgray",
   },
-  contactCard: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#fff",
+  imageContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  infoContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  leftSection: {
-    flexDirection: "row",
+  optionsContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
     alignItems: "center",
-    flex: 1,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginRight: 12,
-  },
-  infoContainer: {
-    justifyContent: "center",
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 4,
-  },
-  location: {
-    fontSize: 13,
-    color: "#666",
-  },
-  moreButton: {
-    padding: 8,
-    width: 40,
-    alignItems: "center",
-  },
-  moreButtonText: {
-    fontSize: 20,
-    color: "#666",
-    fontWeight: "bold",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  },
-  menuContainer: {
-    position: "absolute",
     backgroundColor: "white",
-    borderRadius: 8,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "lightgray",
     borderWidth: 1,
-    borderColor: "#eee",
-    width: 140,
-  },
-  menuItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  menuItemLast: {
-    borderBottomWidth: 0,
-  },
-  menuText: {
-    fontSize: 14,
-    color: "#333",
+    position: "absolute",
+    right: "10%",
   },
 });
