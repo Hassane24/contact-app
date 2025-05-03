@@ -1,6 +1,7 @@
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { Contact } from "./Contacts";
 import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
 
 interface ProfileProps {
   contact: Contact;
@@ -14,10 +15,19 @@ export default function Profile({
   onOptionsPress,
 }: ProfileProps) {
   const [showOptionsMenu, setShowOptionsMenu] = useState<boolean>(showOptions);
+  const router = useRouter();
 
   useEffect(() => {
     setShowOptionsMenu(showOptions);
   }, [showOptions]);
+
+  const handleEdit = () => {
+    onOptionsPress();
+    router.push({
+      pathname: "/edit-contact",
+      params: { contactId: contact.id.toString() },
+    });
+  };
 
   return (
     <Pressable
@@ -43,7 +53,7 @@ export default function Profile({
       </Pressable>
       {showOptionsMenu && (
         <View style={styles.optionsContainer}>
-          <Pressable>
+          <Pressable onPress={handleEdit}>
             <Text>Edit</Text>
           </Pressable>
           <Pressable>

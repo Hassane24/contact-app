@@ -6,7 +6,7 @@ import initializeDatabase from "../../db/db";
 export interface Contact {
   id: number;
   name: string;
-  number: number;
+  number: number | string;
   image: string;
 }
 
