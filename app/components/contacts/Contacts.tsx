@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import initializeDatabase from "../../db/db";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export interface Contact {
   id: number;
@@ -57,7 +58,7 @@ export default function Contacts() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Pressable
         style={styles.listContainer}
         onPress={() => setSelectedContactId(null)}
@@ -74,7 +75,7 @@ export default function Contacts() {
       >
         <Ionicons name="add" size={30} color="white" />
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }
 
