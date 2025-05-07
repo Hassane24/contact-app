@@ -5,25 +5,25 @@ export const DUMMY_CONTACTS: Contact[] = [
   {
     id: 1,
     name: "Takeshi Movic",
-    number: 1234567890,
+    number: "1234567890",
     image: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   {
     id: 2,
     name: "Emma Larwind",
-    number: 1234567890,
+    number: "1234567890",
     image: "https://randomuser.me/api/portraits/women/2.jpg",
   },
   {
     id: 3,
     name: "Giovanni Naitila",
-    number: 1234567890,
+    number: "1234567890",
     image: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
     id: 4,
     name: "Miyoshi Zawn",
-    number: 1234567890,
+    number: "1234567890",
     image: "https://randomuser.me/api/portraits/women/4.jpg",
   },
 ];
@@ -35,7 +35,7 @@ const initializeDatabase = async () => {
   try {
     const database = await connectToDatabase();
     await database.execAsync(
-      "CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, number INTEGER, image TEXT)"
+      "CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, number TEXT, image TEXT)"
     );
 
     const existingContacts = await database.getAllAsync<Contact>(

@@ -5,6 +5,7 @@ import {
   Pressable,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
 import { Contact } from "./components/contacts/Contacts";
 import { useState, useEffect } from "react";
@@ -24,9 +25,7 @@ export default function EditContact() {
           "SELECT * FROM contacts WHERE id = ?",
           [parseInt(contactId as string)]
         );
-        if (contacts.length > 0) {
-          setEditedContact(contacts[0]);
-        }
+        contacts ? setEditedContact(contacts[0]) : null;
       } catch (error) {
         console.error("Error fetching contact:", error);
       }
@@ -37,6 +36,15 @@ export default function EditContact() {
 
   const handleSave = async () => {
     if (!editedContact) return;
+
+    if (editedContact.number.length !== 10) {
+      Alert.alert(
+        "Invalid Phone Number",
+        "Please enter a 10-digit phone number",
+        [{ text: "OK" }]
+      );
+      return;
+    }
 
     try {
       const database = await initializeDatabase();
@@ -61,11 +69,11 @@ export default function EditContact() {
   const handlePhoneNumberChange = (text: string) => {
     if (!editedContact) return;
 
-    // Limit to 10 digits
+    // Limit to 10 digits and ensure it's treated as a string
     const limitedNumber = text.slice(0, 10);
     setEditedContact({
       ...editedContact,
-      number: parseInt(limitedNumber) || "",
+      number: limitedNumber,
     });
   };
 
@@ -90,7 +98,7 @@ export default function EditContact() {
         <Text style={styles.label}>Phone Number</Text>
         <TextInput
           style={styles.input}
-          value={editedContact.number.toString()}
+          value={editedContact.number}
           onChangeText={handlePhoneNumberChange}
           keyboardType="numeric"
           maxLength={10}
