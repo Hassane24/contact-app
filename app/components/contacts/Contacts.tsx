@@ -2,6 +2,8 @@ import { View, FlatList, Pressable, StyleSheet } from "react-native";
 import Profile from "./profile";
 import { useEffect, useState } from "react";
 import initializeDatabase from "../../db/db";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export interface Contact {
   id: number;
@@ -11,6 +13,7 @@ export interface Contact {
 }
 
 export default function Contacts() {
+  const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [selectedContactId, setSelectedContactId] = useState<number | null>(
     null
@@ -54,15 +57,52 @@ export default function Contacts() {
   );
 
   return (
-    <Pressable
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      onPress={() => setSelectedContactId(null)}
-    >
-      <FlatList
-        data={contacts as Contact[]}
-        renderItem={renderContact}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </Pressable>
+    <View style={styles.container}>
+      <Pressable
+        style={styles.listContainer}
+        onPress={() => setSelectedContactId(null)}
+      >
+        <FlatList
+          data={contacts as Contact[]}
+          renderItem={renderContact}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </Pressable>
+      <Pressable
+        style={styles.addButton}
+        onPress={() => router.push("/components/contacts/add-contact")}
+      >
+        <Ionicons name="add" size={30} color="white" />
+      </Pressable>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  listContainer: {
+    flex: 1,
+  },
+  addButton: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#007AFF",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+});

@@ -27,7 +27,7 @@ export default function Profile({
   const handleEdit = () => {
     onOptionsPress();
     router.push({
-      pathname: "/edit-contact",
+      pathname: "/components/contacts/edit-contact",
       params: { contactId: contact.id.toString() },
     });
   };

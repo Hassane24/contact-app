@@ -7,9 +7,9 @@ import {
   Image,
   Alert,
 } from "react-native";
-import { Contact } from "./components/contacts/Contacts";
+import { Contact } from "./Contacts";
 import { useState, useEffect } from "react";
-import initializeDatabase from "./db/db";
+import initializeDatabase from "../../db/db";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
 export default function EditContact() {
