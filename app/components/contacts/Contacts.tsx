@@ -40,11 +40,16 @@ export default function Contacts() {
     setSelectedContactId(contactId === selectedContactId ? null : contactId);
   };
 
+  const handleDeleteContact = (contactId: number) => {
+    setContacts(contacts.filter((contact) => contact.id !== contactId));
+  };
+
   const renderContact = ({ item }: { item: Contact }) => (
     <Profile
       contact={item}
       onOptionsPress={() => handleContactPress(item.id)}
       showOptions={selectedContactId === item.id}
+      onDelete={handleDeleteContact}
     />
   );
 

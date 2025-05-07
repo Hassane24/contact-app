@@ -1,18 +1,21 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet, Alert } from "react-native";
 import { Contact } from "./Contacts";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
+import initializeDatabase from "../../db/db";
 
 interface ProfileProps {
   contact: Contact;
   showOptions: boolean;
   onOptionsPress: () => void;
+  onDelete: (contactId: number) => void;
 }
 
 export default function Profile({
   contact,
   showOptions,
   onOptionsPress,
+  onDelete,
 }: ProfileProps) {
   const [showOptionsMenu, setShowOptionsMenu] = useState<boolean>(showOptions);
   const router = useRouter();
@@ -27,6 +30,36 @@ export default function Profile({
       pathname: "/edit-contact",
       params: { contactId: contact.id.toString() },
     });
+  };
+
+  const handleDelete = async () => {
+    Alert.alert(
+      "Delete Contact",
+      "Are you sure you want to delete this contact?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const database = await initializeDatabase();
+              await database.runAsync("DELETE FROM contacts WHERE id = ?", [
+                contact.id,
+              ]);
+              onDelete(contact.id);
+              onOptionsPress(); // Close the options menu
+            } catch (error) {
+              console.error("Error deleting contact:", error);
+              Alert.alert("Error", "Failed to delete contact");
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -56,8 +89,8 @@ export default function Profile({
           <Pressable onPress={handleEdit} style={{ padding: 10 }}>
             <Text>Edit</Text>
           </Pressable>
-          <Pressable style={{ padding: 10 }}>
-            <Text>Delete</Text>
+          <Pressable onPress={handleDelete} style={{ padding: 10 }}>
+            <Text style={{ color: "red" }}>Delete</Text>
           </Pressable>
         </View>
       )}
