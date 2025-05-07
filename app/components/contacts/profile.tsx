@@ -53,10 +53,10 @@ export default function Profile({
       </Pressable>
       {showOptionsMenu && (
         <View style={styles.optionsContainer}>
-          <Pressable onPress={handleEdit}>
+          <Pressable onPress={handleEdit} style={{ padding: 10 }}>
             <Text>Edit</Text>
           </Pressable>
-          <Pressable>
+          <Pressable style={{ padding: 10 }}>
             <Text>Delete</Text>
           </Pressable>
         </View>
@@ -97,11 +97,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
-    padding: 10,
     borderRadius: 10,
     borderColor: "lightgray",
     borderWidth: 1,
     position: "absolute",
     right: "10%",
+    overflow: "hidden",
+    elevation: 5,
+    shadowColor: "#000",
   },
 });
